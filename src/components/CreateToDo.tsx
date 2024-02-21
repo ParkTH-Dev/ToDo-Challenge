@@ -1,32 +1,33 @@
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import { toDoState } from "../atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { categoryState, toDoState } from "../atom";
 
 interface IForm {
-  todo: string;
+  toDo: string;
 }
 
-export default function CreateToDo() {
+function CreateToDo() {
+  const category = useRecoilValue(categoryState);
   const setToDos = useSetRecoilState(toDoState);
-  const { register, handleSubmit, reset } = useForm<IForm>();
-  const onSubmit = ({ todo }: IForm) => {
+  const { register, handleSubmit, setValue } = useForm<IForm>();
+  const handleValid = ({ toDo }: IForm) => {
     setToDos((oldToDos) => [
-      { text: todo, id: Date.now(), category: "TO_DO" },
+      { text: toDo, id: Date.now(), category },
       ...oldToDos,
     ]);
-    reset();
+    setValue("toDo", "");
   };
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          {...register("todo", {
-            required: "내용을 입력해주세요.",
-          })}
-          placeholder="todo.."
-        />
-        <button>add todo</button>
-      </form>
-    </>
+    <form onSubmit={handleSubmit(handleValid)}>
+      <input
+        {...register("toDo", {
+          required: "Please write a To Do",
+        })}
+        placeholder="Write a to do"
+      />
+      <button>Add</button>
+    </form>
   );
 }
+
+export default CreateToDo;
