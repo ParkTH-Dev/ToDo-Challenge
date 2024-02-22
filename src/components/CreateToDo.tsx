@@ -9,24 +9,28 @@ interface IForm {
 function CreateToDo() {
   const category = useRecoilValue(categoryState);
   const setToDos = useSetRecoilState(toDoState);
+
   const { register, handleSubmit, setValue } = useForm<IForm>();
-  const handleValid = ({ toDo }: IForm) => {
+  const onSubmit = ({ toDo }: IForm) => {
     setToDos((oldToDos) => [
       { text: toDo, id: Date.now(), category },
       ...oldToDos,
     ]);
     setValue("toDo", "");
   };
+
   return (
-    <form onSubmit={handleSubmit(handleValid)}>
-      <input
-        {...register("toDo", {
-          required: "Please write a To Do",
-        })}
-        placeholder="Write a to do"
-      />
-      <button>Add</button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input
+          {...register("toDo", {
+            required: "Please write a To Do",
+          })}
+          placeholder="Write a to do"
+        />
+        <button>Add</button>
+      </form>
+    </>
   );
 }
 
