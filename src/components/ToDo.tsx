@@ -28,7 +28,7 @@ function ToDo({ text, category, id }: IToDo) {
       )}
       {category !== Categories.TO_DO && (
         <button name="TO_DO" onClick={onClick}>
-          To Doo
+          To Do
         </button>
       )}
       {category !== Categories.DONE && (
